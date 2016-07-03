@@ -1,8 +1,9 @@
-I need to decide on some rules
+I need to decide on some rules, like:
 
 Larger radius = lower fertility
 Larger radius = lower speed
 
+=============================================================================================================================
 Features that INCREASE likelihood of reproducing:
 Large size
 High fertility
@@ -11,11 +12,24 @@ High mobility (more likely to move to a space where other cells are located, but
 If using a steering behaviour: High strength of 'Seek' behaviour
 
 
-
-
 Features that DECREASE likelihood of reproducing:
 Small size
 Low fertility
 Low growth rate ? Takes a longer time to reach fertile state, but will remain fertile for longer
 
 If using a steering behaviour: Low strength of 'Seek' behaviour
+
+=============================================================================================================================
+I want the offspring of two parents to clearly show that it has inherited traits from both.
+So, the visual appearance needs to be partly determined by the DNA (or some other inheritable component of the cell object),
+
+The visual elements of the cell are:
+------------------------------------
+Colour (Fill & Stroke, H, S, B & alpha)  (PRIMARY INDICATOR)
+Size (maxiumum radius, either starting small & growing, or starting at max and shrinking)
+Flatness (from circle to ellipse)
+Could possibly introduce some new elements like:
+Nucleus (enabled/disabled, size, colour) (Will possibly always be enabled)
+Stepped drawing effect (cell)
+Stepped drawing effect (nucleus)
+=============================================================================================================================
