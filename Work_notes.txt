@@ -1,0 +1,21 @@
+I need to decide on some rules
+
+Larger radius = lower fertility
+Larger radius = lower speed
+
+Features that INCREASE likelihood of reproducing:
+Large size
+High fertility
+High mobility (more likely to move to a space where other cells are located, but may also avoid other cells)
+
+If using a steering behaviour: High strength of 'Seek' behaviour
+
+
+
+
+Features that DECREASE likelihood of reproducing:
+Small size
+Low fertility
+Low growth rate ? Takes a longer time to reach fertile state, but will remain fertile for longer
+
+If using a steering behaviour: Low strength of 'Seek' behaviour
