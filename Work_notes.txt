@@ -1,7 +1,35 @@
-I need to decide on some rules, like:
+I need to decide on some fundamental rules, like:
 
-Larger radius = lower fertility
+Larger radius = lower fertility    (this would appear to be a rather simple linkage, but is a good place to start)
 Larger radius = lower speed
+
+This will determine what sort of cells PROSPER & SPREAD across the colony
+The initial connection between purely visual elements & those which lead to prosperity is arbitrary.
+As a certain strain prospers in the gene-pool, they ought to dominate the visual output (the collective phenotype) too.
+
+Fertility needs to be a limited quantity. If a cell remains fertile until death, it will most likely reproduce sooner or later.
+On the other hand, if lifetime is short, maybe the cell will die first.
+
+1) Cells are born small and grow to full size
+2) They reach maturity
+
+If a cell starts at full size and starts to shrink, reaching maturity sometime along the way,
+> late maturity will be punished because size is already so small that collision is unlikely (plus, death looms)
+> Combination of early maturity & large birth-size will be favoured. Cells will tend to get bigger?
+> Maybe large size could be combined with higher growth-rate? (Will shrink sooner?)
+
+SIZE / AGE-OF-MATURITY (fecundity)
+GROWTH RATE / MOVEMENT (metabolism)
+
+What about 'Max number of offspring' too? This should be quite easy to include.
+
+"In demography and biology, fecundity is the actual reproductive rate of an organism or population,
+measured by the number of gametes (eggs), seed set, or asexual propagules.
+Fecundity is similar to fertility, the natural capability to produce offspring." <source: https://en.wikipedia.org/wiki/Fecundity>
+
+I need a mechanism to keep the population within executable limits (e.g. a cap on population size)
+A simple way of doing this is to not call 'spawn' function if it will raise the population above the defined ceiling.
+This is an expression of the environment feeding back onto an individual cell, but is somewhat indiscriminate
 
 =============================================================================================================================
 Features that INCREASE likelihood of reproducing:
