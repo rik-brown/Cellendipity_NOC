@@ -49,13 +49,15 @@ function trails() { // Neat trick to create smooth, long trails
 function mousePressed() {
   var mousePos = createVector(mouseX, mouseY);
   var vel = p5.Vector.random2D();
-  if (mousePos.x < (width-270)) {colony.spawn(mousePos, vel, p.fillColor, p.strokeColor, p.cellStartSize);}
+  var dna = new DNA();
+  if (mousePos.x < (width-270)) {colony.spawn(mousePos, vel, p.fillColor, p.strokeColor, dna, p.cellStartSize);}
 }
 
 function mouseDragged() {
   var mousePos = createVector(mouseX, mouseY);
   var vel = p5.Vector.random2D();
-  if (mousePos.x < (width-270)) {colony.spawn(mousePos, vel, p.fillColor, p.strokeColor, p.cellStartSize);}
+  var dna = new DNA();
+  if (mousePos.x < (width-270)) {colony.spawn(mousePos, vel, p.fillColor, p.strokeColor, dna, p.cellStartSize);}
 }
 
 function screenDump() {
@@ -233,7 +235,7 @@ var Parameters = function () { //These are the initial values, not the randomise
   this.lifespan = int(random (1000, 1000)); // Max lifespan in #frames HACKED so always 1000
   this.fertileStart = int(random(80,80)); // HACKED so always 80
   this.spawnLimit = int(random(10));
-  this.flatness = random(0, 50); // Amount of flatness (from circle to ellipse)
+  this.flatness = random(0, 100); // Amount of flatness (from circle to ellipse)
   if (random(1) > 0) {this.nucleus = true;} else {this.nucleus = false;} // HACKED so always true
 
   this.noisePercent = random(100); // Percentage of velocity coming from noise-calculation

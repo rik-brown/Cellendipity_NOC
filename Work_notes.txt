@@ -1,3 +1,18 @@
+Tuesday 5th July 17:00
+
+OK, seems to still be running despite my attempts at destroying everything
+Seems to be running more slowly & labouring.
+Could it be this change? in colony.js? if (this.cells.length <= colonyMaxSize && c.fertile) //it used to be two consecutive if statements
+
+I think DNA is now being combined, but it's hard to be 100% sure
+When I look at f.eks flatness, it's clear that Cells spawned by conception take there shape from the current GUI selection
+Need to look at this in the cell Constructor.
+
+I'd like this to run fast & smooth & be quite simple.
+Maybe shape is enough to demonstrate inheritance?
+Or at least - keep colorShifters simple & not linked to DNA (they are nice-to-have)
+
+============================================================================================================================
 Tuesday 5th July 08:47
 I have running code where a randomised population of cells interbreeds.
 Each cell in the initial spawn is unique (randomised parameters).
@@ -28,6 +43,33 @@ DNA passed into colony.spawn so it doesn't need to get new random DNAthis.spawn 
 
 Ellipses can also be cigars (flatness < 1.0)
 
+From "Evolution Ecosystem":
+// At any moment there is a teeny, tiny chance a bloop will reproduce
+this.reproduce = function() {
+  // asexual reproduction
+  if (random(1) < 0.0005) {
+    // Child is exact copy of single parent
+    var childDNA = this.dna.copy();
+    // Child DNA can mutate
+    childDNA.mutate(0.01);
+    return new Bloop(this.position, childDNA);
+  }
+  else {
+    return null;
+  }
+}
+
+Bloop constructor is called with childDNA passed in, just like a Cell.
+Reproduction is called in the world/colony:
+// Perhaps this bloop would like to make a baby?
+var child = b.reproduce();      // cell b is copied by reproduce() which returns a new Bloop
+if (child != null) this.bloops.push(child);
+}
+I need something like:
+var childDNA = this.dna.combine(other.dna);
+
+Solved as combine() in DNA
+============================================================================================================================
 
 
 Later on:

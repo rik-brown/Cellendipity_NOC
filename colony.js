@@ -17,9 +17,8 @@ function Colony(colonySize, cellStartSize_) {
     this.cells.push(new Cell(pos, vel, p.fillColor, p.strokeColor, dna, p.cellStartSize)); // Add new Cell with DNA
   }
 
-  this.spawn = function(mousePos, vel, fillColor_, strokeColor_, cellStartSize_) {
+  this.spawn = function(mousePos, vel, fillColor_, strokeColor_, dna_, cellStartSize_) {
     // Spawn a new cell (called by e.g. MousePressed in main, accepting mouse coords for start position)
-    var dna = new DNA();
     var cellStartSize = cellStartSize_;
     var fillColor = fillColor_;
     var strokeColor = strokeColor_;
@@ -29,21 +28,17 @@ function Colony(colonySize, cellStartSize_) {
   // Run the colony
   this.run = function() {
     if (p.debug) {this.colonyDebugger(); }
-
     // Iterate backwards through the ArrayList because we are removing items
     for (var i = this.cells.length - 1; i >= 0; i--) {
-      var c = this.cells[i]; // Get one cell at a time
-      c.run(); // Run it (grow, move, spawn, check position vs boundaries etc.)
-      if (c.dead()) {this.cells.splice(i, 1); // If cell has died, remove it from the array
-      }
+      var c = this.cells[i];                    // Get one cell at a time
+      c.run();                                  // Run the cell (grow, move, spawn, check position vs boundaries etc.)
+      if (c.dead()) {this.cells.splice(i, 1); } // If the cell has died, remove it from the array
 
-      // Iteration to check collision between current cell(i) and the rest
-      if (this.cells.length <= colonyMaxSize) { // Don't check for collisons if there are too many cells (wait until some die off)
-        if (c.fertile) { //Only do the check on cells that are fertile
-          for (var others = i - 1; others >= 0; others--) { // Since main iteration (i) goes backwards, this one needs to too
-            var other = this.cells[others]; // Get the other cells, one by one
-            if (other.fertile) {c.checkCollision(other);} // Only check for collisions when both cells are fertile
-          }
+      // Iteration to check for a collision-conception event between current cell(i) (if it's fertile) and the rest of the colony
+      if (this.cells.length <= colonyMaxSize && c.fertile) { // Don't check for collisons if there are too many cells (wait until some die off)
+        for (var others = i - 1; others >= 0; others--) { // Since main iteration (i) goes backwards, this one needs to too
+          var other = this.cells[others]; // Get the other cells, one by one
+          if (other.fertile) {c.checkCollision(other);} // Only check for collisions when both cells are fertile
         }
       }
     }

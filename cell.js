@@ -35,7 +35,7 @@ function Cell(pos, vel, fillColor_, strokeColor_, dna_, cellStartSize_) {
   this.cellStartSize = lerp(cellStartSize_, (cellStartSize_ * map(this.dna.genes[1], 0, 1, 0.8, 1.0)), p.variance*0.01); // Note: If last value in map() is >1 then new cells may be larger than their parents
   this.cellEndSize = lerp(p.cellEndSize, (p.cellEndSize * map(this.dna.genes[2], 0, 1, 1.0, 2.0)), p.variance*0.01);
   this.r = this.cellStartSize; // Initial value for radius
-  this.flatness = lerp(p.flatness*0.01, (p.flatness*0.01 * map(this.dna.genes[13], 0, 1, 0.8, 1.2)), p.variance*0.01) +1; // To make circles into ellipses
+  this.flatness = lerp(p.flatness*0.01, (p.flatness*0.01 * map(this.dna.genes[13], 0, 1, 0.5, 1.5)), p.variance*0.01) +1; // To make circles into ellipses
   this.growth = (this.cellStartSize-this.cellEndSize)/p.lifespan; // Should work for both large>small and small>large
   this.drawStep = 1;
   this.drawStepN = 1;
@@ -217,9 +217,13 @@ function Cell(pos, vel, fillColor_, strokeColor_, dna_, cellStartSize_) {
     // Calculate new cellStartSize for child (=average of each parent cells)
     var childStartSize = (this.cellStartSize + other.cellStartSize) * 0.5;
 
+    // Combine the DNA of the parent cells
+    var childDNA = this.dna.combine(other.dna);
+
     // Call spawn method (in Colony) with the new parameters for position, velocity, colour & starting radius)
     // Note: Currently no combining of parent DNA
-    colony.spawn(spawnPos, spawnVel, childFillColor, childStrokeColor, childStartSize);
+    colony.spawn(spawnPos, spawnVel, childFillColor, childStrokeColor,childDNA, childStartSize);
+
 
     //Reduce fertility for parent cells by squaring them
     this.fertility *= this.fertility;
