@@ -18,7 +18,7 @@ function setup() {
   initGUI();
   background(p.bkgColor);
   if (p.debug) {frameRate(10);}
-  colony = new Colony(p.colonySize, p.cellStartSize);
+  colony = new Colony(p.colonySize);
 }
 
 function draw() {
@@ -34,7 +34,7 @@ function populateColony() {
   background(p.bkgColor); // Refresh the background
   colony.cells = [];
   if (p.randomize) {randomizer();}
-  colony = new Colony(p.colonySize, p.cellStartSize);
+  colony = new Colony(p.colonySize);
 }
 
 function trails() { // Neat trick to create smooth, long trails
@@ -50,57 +50,33 @@ function mousePressed() {
   var mousePos = createVector(mouseX, mouseY);
   var vel = p5.Vector.random2D();
   var dna = new DNA();
-  if (mousePos.x < (width-270)) {colony.spawn(mousePos, vel, p.fillColor, p.strokeColor, dna, p.cellStartSize);}
+  if (mousePos.x < (width-270)) {colony.spawn(mousePos, vel, dna);}
 }
 
 function mouseDragged() {
   var mousePos = createVector(mouseX, mouseY);
   var vel = p5.Vector.random2D();
   var dna = new DNA();
-  if (mousePos.x < (width-270)) {colony.spawn(mousePos, vel, p.fillColor, p.strokeColor, dna, p.cellStartSize);}
+  if (mousePos.x < (width-270)) {colony.spawn(mousePos, vel, dna);}
 }
 
 function screenDump() {
   saveCanvas('screendump.png', 'png');
 }
 
-function updateHSV(fillH, strokeH) {
-  p.fillColHSV = { h: fillH, s: 1, v: 1 };
-  p.fillColor = color(p.fillColHSV.h, p.fillColHSV.s*255, p.fillColHSV.v*255);
-  p.strokeColHSV = { h: strokeH, s: 1, v: 1 };
-  p.strokeColor = color(p.strokeColHSV.h, p.strokeColHSV.s*255, p.strokeColHSV.v*255);
-}
-
-
 function keyTyped() {
-  if (key === '1') {updateHSV(  0,   0); } // fillColor = RED
-  if (key === '2') {updateHSV( 60,  60); } // fillColor = YELLOW
-  if (key === '3') {updateHSV(120, 120); } // fillColor = GREEN
-  if (key === '4') {updateHSV(180, 180); } // fillColor = CYAN
-  if (key === '5') {updateHSV(240, 240); } // fillColor = BLUE
-  if (key === '6') {updateHSV(300, 300); } // fillColor = VIOLET
-  if (key === '7') { // fillColor = WHITE
-      p.fillColHSV = { h: 0, s: 0, v: 1 };
-      p.fillColor = color(p.fillColHSV.h, p.fillColHSV.s*255, p.fillColHSV.v*255);
-      p.strokeColHSV = { h: 0, s: 0, v: 1 };
-      p.strokeColor = color(p.strokeColHSV.h, p.strokeColHSV.s*255, p.strokeColHSV.v*255);
+  if (key === '1') { // '1' sets trailMode = 1 (None)
+    p.trailMode = 1;
   }
-  if (key === '8') { // fillColor = BLACK
-    p.fillColHSV = { h: 0, s: 0, v: 0 };
-    p.fillColor = color(p.fillColHSV.h, p.fillColHSV.s*255, p.fillColHSV.v*255);
-    p.strokeColHSV = { h: 0, s: 0, v: 0 };
-    p.strokeColor = color(p.strokeColHSV.h, p.strokeColHSV.s*255, p.strokeColHSV.v*255);
+
+  if (key === '2') { // '2' sets trailMode = 2 (Blended)
+    p.trailMode = 2;
   }
-  if (key === '9') { // fillColor increase Hue
-    p.fillColHSV.h += 2; //
-    if (p.fillColHSV.h > 360) {p.fillColHSV.h = 0;}
-    p.fillColor = color(p.fillColHSV.h, p.fillColHSV.s*255, p.fillColHSV.v*255);
+
+  if (key === '3') { // '3' sets trailMode = 3 (Continuous)
+    p.trailMode = 3;
   }
-  if (key === '0') { // fillColor decrease Hue
-    p.fillColHSV.h -= 2; //
-    if (p.fillColHSV.h < 0) {p.fillColHSV.h = 360;}
-    p.fillColor = color(p.fillColHSV.h, p.fillColHSV.s*255, p.fillColHSV.v*255);
-  }
+
 
   if (key === ' ') { //spacebar respawns with current settings
     colony.cells = [];
@@ -138,20 +114,12 @@ var initGUI = function () {
 	var f1 = gui.addFolder('Colony');
 		var controller = f1.add(p, 'colonySize', 1, 200).step(1).name('Size').listen();
 		  controller.onChange(function(value) {populateColony(); });
-		var controller = f1.add(p, 'variance', 0, 100).step(1).name('Diversity').listen();
-      controller.onChange(function(value) {populateColony(); });
 		var controller = f1.add(p, 'centerSpawn').name('Centered [C]').listen();
 		  controller.onChange(function(value) {populateColony(); });
 
 	var f2 = gui.addFolder('Colour');
 	  var controller = f2.addColor(p, 'bkgColHSV').name('Background').listen();
 	    controller.onChange(function(value) {p.bkgColor = color(value.h, value.s*255, value.v*255); background(p.bkgColor);});
-	  var controller = f2.addColor(p, 'fillColHSV').name('Cell').listen();
-      controller.onChange(function(value) {p.fillColor = color(value.h, value.s*255, value.v*255);});
-    f2.add(p, 'fillAlpha', 0, 255).name('Transparency').listen();
-    var controller = f2.addColor(p, 'strokeColHSV').name('Membrane').listen();
-	    controller.onChange(function(value) {p.strokeColor = color(value.h, value.s*255, value.v*255);});
-	  f2.add(p, 'strokeAlpha', 0, 255).name('Transparency').listen();
 
 	var f3 = gui.addFolder("Cell Tweaks");
 	  f3.add(p, 'fill_HTwist', 0, 360).step(1).name('Hue').listen();
@@ -165,27 +133,12 @@ var initGUI = function () {
       f4.add(p, 'stroke_BTwist', 0, 255).name('Brightness').listen();
       f4.add(p, 'stroke_ATwist', 0, 255).name('Alpha').listen();
 
-	var f5 = gui.addFolder("Growth");
-		var controller = f5.add(p, 'cellStartSize', 0, 200).step(1).name('Size (start)').listen();
-		  controller.onChange(function(value) {populateColony();});
-		var controller = f5.add(p, 'cellEndSize', 0, 50).step(0.5).name('Size (end)').listen();
-		  controller.onChange(function(value) {populateColony(); });
-		var controller = f5.add(p, 'lifespan', 100, 2000).step(10).name('Lifespan').listen();
-		  controller.onChange(function(value) {populateColony(); });
-		var controller = f5.add(p, 'fertileStart', 0, 100).step(1).name('Fertility%').listen();
-		  controller.onChange(function(value) {populateColony();});
-		f5.add(p, 'spawnLimit', 0, 10).step(1).name('#Children');
-    f5.add(p, 'growing').name('Cells grow');
-
 	var f6 = gui.addFolder("Movement");
-    f6.add(p, 'noisePercent', 0, 100).step(1).name('Noise%').listen();
-	  f6.add(p, 'spiral', 0, 3).name('Spirals').listen();
-	  var controller =f6.add(p, 'stepSize', 0, 100).name('Step (cell)').listen();
+    var controller =f6.add(p, 'stepSize', 0, 100).name('Step (cell)').listen();
 	   controller.onChange(function(value) {if (p.stepSize==0) {p.stepped=false} else {p.stepped=true};});
 
 
 	var f7 = gui.addFolder("Appearance");
-    f7.add(p, 'flatness', 0, 100).name('Flatness%').listen();
     f7.add(p, 'nucleus').name('Nucleus [N]').listen();
     f7.add(p, 'stepSizeN', 0, 100).name('Step (nucleus)').listen();
 
@@ -213,41 +166,24 @@ var Parameters = function () { //These are the initial values, not the randomise
   this.bkgColHSV = { h: random(360), s: random(128, 255), v: random(128, 255) }; // HACKED so always above 128
   this.bkgColor = color(this.bkgColHSV.h, this.bkgColHSV.s*255, this.bkgColHSV.v*255); // Background colour
   this.bkgColor = color(0, 0, 255); // Background colour HACKED to give white background
-  this.fillColHSV = { h: random(360), s: random(), v: random() };
-  this.fillColor = color(this.fillColHSV.h, this.fillColHSV.s*255, this.fillColHSV.v*255); // Cell colour
-  this.fillAlpha = random(255);
-  this.strokeColHSV = { h: random(360), s: random(128, 255), v: random(128, 255) }; // HACKED so always above 128
-  this.strokeColor = color(this.strokeColHSV.h, this.strokeColHSV.s*255, this.strokeColHSV.v*255); // Cell colour
-  this.strokeAlpha = random(255);
 
-  this.variance = 100; // Degree of influence from DNA over respective parameters. 0 = no influence from DNA, values are taken direct from GUI, all cells are similar // HACKED so always 100
+  if (random(1) > 1) {this.fill_HTwist = floor(random(1, 360));} else {this.fill_HTwist = 0;}
+  if (random(1) > 1) {this.fill_STwist = floor(random (1,255));} else {this.fill_STwist = 0;}
+  if (random(1) > 1) {this.fill_BTwist = floor(random (1,255));} else {this.fill_BTwist = 0;}
+  if (random(1) > 1) {this.fill_ATwist = floor(random (1,255));} else {this.fill_ATwist = 0;}
+  if (random(1) > 1) {this.stroke_HTwist = floor(random(1, 360));} else {this.stroke_HTwist = 0;}
+  if (random(1) > 1) {this.stroke_STwist = floor(random (1,255));} else {this.stroke_STwist = 0;}
+  if (random(1) > 1) {this.stroke_BTwist = floor(random (1,255));} else {this.stroke_BTwist = 0;}
+  if (random(1) > 1) {this.stroke_ATwist = floor(random (1,255));} else {this.stroke_ATwist = 0;}
 
-  if (random(1) > 0.8) {this.fill_HTwist = floor(random(1, 360));} else {this.fill_HTwist = 0;}
-  if (random(1) > 0.7) {this.fill_STwist = floor(random (1,255));} else {this.fill_STwist = 0;}
-  if (random(1) > 0.8) {this.fill_BTwist = floor(random (1,255));} else {this.fill_BTwist = 0;}
-  if (random(1) > 0.9) {this.fill_ATwist = floor(random (1,255));} else {this.fill_ATwist = 0;}
-  if (random(1) > 0.8) {this.stroke_HTwist = floor(random(1, 360));} else {this.stroke_HTwist = 0;}
-  if (random(1) > 0.7) {this.stroke_STwist = floor(random (1,255));} else {this.stroke_STwist = 0;}
-  if (random(1) > 0.8) {this.stroke_BTwist = floor(random (1,255));} else {this.stroke_BTwist = 0;}
-  if (random(1) > 0.9) {this.stroke_ATwist = floor(random (1,255));} else {this.stroke_ATwist = 0;}
-
-  this.cellStartSize = random(30, 30); // Cell radius at spawn // HACKED so always 30
-  this.cellEndSize = random(3, 3); // HACKED so always 3
-  this.lifespan = int(random (1000, 1000)); // Max lifespan in #frames HACKED so always 1000
-  this.fertileStart = int(random(80,80)); // HACKED so always 80
-  this.spawnLimit = int(random(10));
-  this.flatness = random(0, 100); // Amount of flatness (from circle to ellipse)
   if (random(1) > 0) {this.nucleus = true;} else {this.nucleus = false;} // HACKED so always true
 
-  this.noisePercent = random(100); // Percentage of velocity coming from noise-calculation
-  this.spiral = random(2); // Number of full (TWO_PI) rotations the velocity heading will turn through during lifespan
   this.stepSize = 0;
   this.stepSizeN = 0;
   this.stepped = false;
   this.wraparound = false;
 
-  this.growing = true;
-  this.trailMode = 1; // 1=none, 2 = blend, 3 = continuous
+  this.trailMode = 3; // 1=none, 2 = blend, 3 = continuous
   this.restart = function () {colony.cells = []; populateColony();};
   this.randomRestart = function () {randomizer(); colony.cells = []; populateColony();};
   this.instructions = function () {window.open("http://rik-brown.github.io/Aybe_Sea/Instructions.txt")};
@@ -256,19 +192,11 @@ var Parameters = function () { //These are the initial values, not the randomise
 }
 
 function randomizer() { // Parameters are randomized (more than in the initial configuration)
-  //p.colonySize = int(random (2,30));
-  //if (random(1) > 0.4) {p.centerSpawn = true;} else {p.centerSpawn = false;}
+  p.colonySize = int(random (10,200));
+  if (random(1) > 0.4) {p.centerSpawn = true;} else {p.centerSpawn = false;}
 
   p.bkgColHSV = { h: random(360), s: random(), v: random() };
   p.bkgColor = color(p.bkgColHSV.h, p.bkgColHSV.s*255, p.bkgColHSV.v*255);
-  p.fillColHSV = { h: random(360), s: random(), v: random() };
-  p.fillColor = color(p.fillColHSV.h, p.fillColHSV.s*255, p.fillColHSV.v*255);
-  p.strokeColHSV = { h: random(360), s: random(), v: random() };
-  p.strokeColor = color(p.strokeColHSV.h, p.strokeColHSV.s*255, p.strokeColHSV.v*255);
-  p.fillAlpha = random(255);
-  p.strokeAlpha = random(255);
-
-  //p.variance = random(100);
 
   if (random(1) > 0.5) {this.fill_HTwist = floor(random(1, 360));} else {this.fill_HTwist = 0;}
   if (random(1) > 0.5) {this.fill_STwist = floor(random (1,255));} else {this.fill_STwist = 0;}
@@ -279,26 +207,9 @@ function randomizer() { // Parameters are randomized (more than in the initial c
   if (random(1) > 0.5) {this.stroke_BTwist = floor(random (1,255));} else {this.stroke_BTwist = 0;}
   if (random(1) > 0.5) {this.stroke_ATwist = floor(random (1,255));} else {this.stroke_ATwist = 0;}
 
-  p.cellStartSize = random(25,50);
-  p.cellEndSize = random(0, 20);
-  p.lifespan = int(random (100, 3000));
-  p.fertileStart = int(random(95));
-  p.spawnLimit = int(random(10));
-  p.flatness = random(100);
   if (random(1) > 0.7) {p.nucleus = true;} else {p.nucleus = false;}
 
-  p.noisePercent = random(100); // Percentage of velocity coming from noise-calculation
-  p.spiral = random(3); // Number of full (TWO_PI) rotations the velocity heading will turn through during lifespan
-  //if (random(1) < 0.7) {p.stepSize = 0;} else {p.stepSize = random(100)};
-  //if (p.stepSize==0) {p.stepped=false} else {p.stepped=true}
+  if (random(1) < 0.7) {p.stepSize = 0;} else {p.stepSize = random(100)};
+  if (p.stepSize==0) {p.stepped=false} else {p.stepped=true}
   p.stepSizeN = random(20);
-}
-
-function randomizeCellColor() { // Cell fill- and stroke- color parameters are randomized
-  p.fillColHSV = { h: random(360), s: random(), v: random() };
-  p.fillColor = color(p.fillColHSV.h, p.fillColHSV.s*255, p.fillColHSV.v*255);
-  p.strokeColHSV = { h: random(360), s: random(), v: random() };
-  p.strokeColor = color(p.strokeColHSV.h, p.strokeColHSV.s*255, p.strokeColHSV.v*255);
-  p.fillAlpha = random(255);
-  p.strokeAlpha = random(255);
 }

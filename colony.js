@@ -1,7 +1,7 @@
 // Colony class
 
 // CONSTRUCTOR: Create a 'Colony' object, initially populated with 'colonySize' cells
-function Colony(colonySize, cellStartSize_) {
+function Colony(colonySize) {
   // Start with an array for all cells
   this.cells = [];
 
@@ -13,16 +13,14 @@ function Colony(colonySize, cellStartSize_) {
     if (p.centerSpawn) {var pos = createVector(width/2, height/2);} else {var pos = createVector(random(width), random(height));}
     var vel = p5.Vector.random2D(); // Initial velocity vector is random
     var dna = new DNA(); // Get new DNA
-    randomizeCellColor(); // Randomize all parameters
-    this.cells.push(new Cell(pos, vel, p.fillColor, p.strokeColor, dna, p.cellStartSize)); // Add new Cell with DNA
+    this.cells.push(new Cell(pos, vel, dna)); // Add new Cell with DNA
   }
 
-  this.spawn = function(mousePos, vel, fillColor_, strokeColor_, dna_, cellStartSize_) {
+  this.spawn = function(mousePos, vel, fillColor_, strokeColor_, dna_) {
     // Spawn a new cell (called by e.g. MousePressed in main, accepting mouse coords for start position)
-    var cellStartSize = cellStartSize_;
     var fillColor = fillColor_;
     var strokeColor = strokeColor_;
-    this.cells.push(new Cell(mousePos, vel, fillColor, strokeColor, dna, cellStartSize));
+    this.cells.push(new Cell(mousePos, vel, dna_));
   };
 
   // Run the colony
@@ -56,9 +54,9 @@ function Colony(colonySize, cellStartSize_) {
 
   this.colonyDebugger = function() { // Displays some values as text at the top left corner (for debug only)
     fill(0);
-    rect(0,0,300,20);
-    fill(360, 100);
+    rect(0,0,250,20);
+    fill(360);
     textSize(16);
-    text("Nr. cells: " + this.cells.length + " MaxLimit:" + colonyMaxSize, 10, 20);
+    text("Nr. cells: " + this.cells.length + " MaxLimit:" + colonyMaxSize, 10, 18);
   };
 }
