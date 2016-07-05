@@ -54,14 +54,14 @@ function Cell(pos, vel, dna) {
   this.fill_S = map(this.dna.genes[1], 0, 1, 255, 255);
   this.fill_B = map(this.dna.genes[2], 0, 1, 255, 255);
   this.fillColor = color(this.fill_H, this.fill_S, this.fill_B); // Initial color is set
-  this.fillAlpha = map(this.dna.genes[3], 0, 1, 255, 255);
+  this.fillAlpha = map(this.dna.genes[3], 0, 1, 0, 255);
 
   //STROKE COLOR
   this.stroke_H = map(this.dna.genes[4], 0, 1, 0, 360);
   this.stroke_S = map(this.dna.genes[5], 0, 1, 0, 255);
   this.stroke_B = map(this.dna.genes[6], 0, 1, 0, 255);
   this.strokeColor = color(this.stroke_H, this.stroke_S, this.stroke_B); // Initial color is set
-  this.strokeAlpha = map(this.dna.genes[7], 0, 1, 0, 0);
+  this.strokeAlpha = map(this.dna.genes[7], 0, 1, 0, 255);
 
   this.run = function() {
     this.live();

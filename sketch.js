@@ -88,6 +88,7 @@ function keyTyped() {
 
   if (key === 'c') { // C toggles 'centered' mode
     p.centerSpawn = !p.centerSpawn;
+    colony.cells = [];
   }
 
   if (key === 'd') { // D toggles 'cell debug' mode
