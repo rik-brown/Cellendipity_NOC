@@ -1,3 +1,11 @@
+Tuesday 5th July 17:54
+
+I need to take the step to make DNA 100% defining for the Cell.
+This is the only way to see that inheritance is really working
+I'll do this by making a branch in the code, for safety's sake.
+
+
+============================================================================================================================
 Tuesday 5th July 17:00
 
 OK, seems to still be running despite my attempts at destroying everything

@@ -3,7 +3,7 @@
 // by Daniel Shiffman <http://www.shiffman.net>
 // NOTE: 'copy()' and 'mutate()' are not in use
 
-var numGenes = 15
+var numGenes = 12
 
 // Constructor (makes a random DNA with 15 genes)
 function DNA(newgenes) {
@@ -18,14 +18,6 @@ function DNA(newgenes) {
     }
   }
 
-  this.copy = function() { // Returns a new set of DNA which is an exact copy of this.genes
-    var newgenes = []; // an empty array, ready to be populated
-    for (var i = 0; i < this.genes.length; i++) { // iterate through
-      newgenes[i] = this.genes[i];
-    }
-    return new DNA(newgenes); // Calls the DNA constructor and passes in the newly populated newgenes array
-  }
-
   this.combine = function(otherDNA_) { // Returns a new set of DNA consisting of randomly selected genes from both parents
     var newgenes = []; // an empty array, ready to be populated
     for (var i = 0; i < this.genes.length; i++) { // iterate through the entire DNA
@@ -35,7 +27,7 @@ function DNA(newgenes) {
   }
 
   // Based on a mutation probability 'm', picks a new random character in array spots
-  this.mutate = function(m) {
+  this.mutate = function(m) { 
     for (var i = 0; i < this.genes.length; i++) {
       if (random(1) < m) {
         this.genes[i] = random(0, 1);
