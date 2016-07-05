@@ -1,9 +1,9 @@
 /*
- * Cellendipity
+ * Cellendipity NOC
+ * Kadenze 'Nature of Code' course
  * by Richard Brown
- * Version 1.0 24th June 2016
- * cellendipity@gmail.com
- */
+ * Assignment 05 : Genetic Algorithms
+  */
 
 var colony; // A colony object
 
@@ -14,7 +14,7 @@ function setup() {
   ellipseMode(RADIUS);
   p = new Parameters();
   gui = new dat.GUI();
-  gui.remember(p); // Comment this out to disable saving presets
+  //gui.remember(p); // Comment this out to disable saving presets
   initGUI();
   background(p.bkgColor);
   if (p.debug) {frameRate(10);}
@@ -22,8 +22,8 @@ function setup() {
 }
 
 function draw() {
-  if (!p.trails || p.debug) {background(p.bkgColor);}
-  if (p.veils) {veil();}
+  if (p.trailMode == 1 || p.debug) {background(p.bkgColor);}
+  if (p.trailMode == 2) {trails();}
   if (!p.paused) {colony.run();}
   if (p.paused && mouseIsPressed) {colony.run();}
   if (p.paused && keyIsPressed) {colony.run();}
@@ -37,7 +37,7 @@ function populateColony() {
   colony = new Colony(p.colonySize, p.cellStartSize);
 }
 
-function veil() { // Neat trick to create smooth, long trails
+function trails() { // Neat trick to create smooth, long trails
   blendMode(DIFFERENCE);
   noStroke();
   fill(1);
@@ -186,12 +186,11 @@ var initGUI = function () {
     f7.add(p, 'flatness', 0, 100).name('Flatness%').listen();
     f7.add(p, 'nucleus').name('Nucleus [N]').listen();
     f7.add(p, 'stepSizeN', 0, 100).name('Step (nucleus)').listen();
-    f7.add(p, 'veils').name('Trails (short)');
-    f7.add(p, 'trails').name('Trails (long)');
 
   var f8 = gui.addFolder("Options");
     var controller = f8.add(p, 'wraparound').name('Wraparound');
       controller.onChange(function(value) {populateColony();});
+    f8.add(p, 'trailMode', { None: 1, Blend: 2, Continuous: 3} ).name('Trail Mode');
     f8.add(p, 'paused').name('Pause [P]').listen();
     f8.add(p, 'autoRestart').name('Auto-restart');
     f8.add(p, 'randomize').name('Randomize on restart');
@@ -203,22 +202,22 @@ var initGUI = function () {
 }
 
 var Parameters = function () { //These are the initial values, not the randomised ones
-  this.colonySize = int(random (3,50)); // Max number of cells in the colony
+  this.colonySize = int(random (100,100)); // Max number of cells in the colony
   this.centerSpawn = false; // true=initial spawn is width/2, height/2 false=random
   this.autoRestart = false; // If true, will not wait for keypress before starting anew
   this.paused = false; // If true, draw will not advance unless mouseIsPressed
   this.randomize = false; // If true, parameters will be randomized on restart
 
-  this.bkgColHSV = { h: random(360), s: random(), v: random() };
+  this.bkgColHSV = { h: random(360), s: random(128, 255), v: random(128, 255) }; // HACKED so always above 128
   this.bkgColor = color(this.bkgColHSV.h, this.bkgColHSV.s*255, this.bkgColHSV.v*255); // Background colour
   this.fillColHSV = { h: random(360), s: random(), v: random() };
   this.fillColor = color(this.fillColHSV.h, this.fillColHSV.s*255, this.fillColHSV.v*255); // Cell colour
   this.fillAlpha = random(255);
-  this.strokeColHSV = { h: random(360), s: random(), v: random() };
+  this.strokeColHSV = { h: random(360), s: random(128, 255), v: random(128, 255) }; // HACKED so always above 128
   this.strokeColor = color(this.strokeColHSV.h, this.strokeColHSV.s*255, this.strokeColHSV.v*255); // Cell colour
   this.strokeAlpha = random(255);
 
-  this.variance = random(100); // Degree of influence from modulators & tweakers (from 0-1 or 0-100%)
+  this.variance = 100; // Degree of influence from DNA over respective parameters. 0 = no influence from DNA, values are taken direct from GUI, all cells are similar // HACKED so always 100
 
   if (random(1) > 0.8) {this.fill_HTwist = floor(random(1, 360));} else {this.fill_HTwist = 0;}
   if (random(1) > 0.7) {this.fill_STwist = floor(random (1,255));} else {this.fill_STwist = 0;}
@@ -229,24 +228,23 @@ var Parameters = function () { //These are the initial values, not the randomise
   if (random(1) > 0.8) {this.stroke_BTwist = floor(random (1,255));} else {this.stroke_BTwist = 0;}
   if (random(1) > 0.9) {this.stroke_ATwist = floor(random (1,255));} else {this.stroke_ATwist = 0;}
 
-  this.cellStartSize = random(30,100); // Cell radius at spawn
-  this.cellEndSize = random(0, 10);
-  this.lifespan = int(random (100, 5000)); // Max lifespan in #frames
-  this.fertileStart = int(random(90));
+  this.cellStartSize = random(30, 30); // Cell radius at spawn // HACKED so always 30
+  this.cellEndSize = random(3, 3); // HACKED so always 3
+  this.lifespan = int(random (1000, 1000)); // Max lifespan in #frames HACKED so always 1000
+  this.fertileStart = int(random(80,80)); // HACKED so always 80
   this.spawnLimit = int(random(10));
   this.flatness = random(0, 50); // Amount of flatness (from circle to ellipse)
-  if (random(1) > 0.8) {this.nucleus = true;} else {this.nucleus = false;}
+  if (random(1) > 0) {this.nucleus = true;} else {this.nucleus = false;} // HACKED so always true
 
   this.noisePercent = random(100); // Percentage of velocity coming from noise-calculation
   this.spiral = random(2); // Number of full (TWO_PI) rotations the velocity heading will turn through during lifespan
   this.stepSize = 0;
-  this.stepSizeN = 10;
+  this.stepSizeN = 0;
   this.stepped = false;
   this.wraparound = false;
 
   this.growing = true;
-  this.veils = false;
-  this.trails = true;
+  this.trailMode = 1; // 1=none, 2 = blend, 3 = continuous
   this.restart = function () {colony.cells = []; populateColony();};
   this.randomRestart = function () {randomizer(); colony.cells = []; populateColony();};
   this.instructions = function () {window.open("http://rik-brown.github.io/Aybe_Sea/Instructions.txt")};
@@ -254,9 +252,9 @@ var Parameters = function () { //These are the initial values, not the randomise
 
 }
 
-this.randomizer = function() { // Parameters are randomized (more than in the initial configuration)
-  p.colonySize = int(random (2,30));
-  if (random(1) > 0.4) {p.centerSpawn = true;} else {p.centerSpawn = false;}
+function randomizer() { // Parameters are randomized (more than in the initial configuration)
+  //p.colonySize = int(random (2,30));
+  //if (random(1) > 0.4) {p.centerSpawn = true;} else {p.centerSpawn = false;}
 
   p.bkgColHSV = { h: random(360), s: random(), v: random() };
   p.bkgColor = color(p.bkgColHSV.h, p.bkgColHSV.s*255, p.bkgColHSV.v*255);
@@ -267,7 +265,7 @@ this.randomizer = function() { // Parameters are randomized (more than in the in
   p.fillAlpha = random(255);
   p.strokeAlpha = random(255);
 
-  p.variance = random(100);
+  //p.variance = random(100);
 
   if (random(1) > 0.5) {this.fill_HTwist = floor(random(1, 360));} else {this.fill_HTwist = 0;}
   if (random(1) > 0.5) {this.fill_STwist = floor(random (1,255));} else {this.fill_STwist = 0;}
@@ -288,7 +286,16 @@ this.randomizer = function() { // Parameters are randomized (more than in the in
 
   p.noisePercent = random(100); // Percentage of velocity coming from noise-calculation
   p.spiral = random(3); // Number of full (TWO_PI) rotations the velocity heading will turn through during lifespan
-  if (random(1) < 0.7) {p.stepSize = 0;} else {p.stepSize = random(100)};
-  if (p.stepSize==0) {p.stepped=false} else {p.stepped=true}
+  //if (random(1) < 0.7) {p.stepSize = 0;} else {p.stepSize = random(100)};
+  //if (p.stepSize==0) {p.stepped=false} else {p.stepped=true}
   p.stepSizeN = random(20);
+}
+
+function randomizeCellColor() { // Cell fill- and stroke- color parameters are randomized
+  p.fillColHSV = { h: random(360), s: random(), v: random() };
+  p.fillColor = color(p.fillColHSV.h, p.fillColHSV.s*255, p.fillColHSV.v*255);
+  p.strokeColHSV = { h: random(360), s: random(), v: random() };
+  p.strokeColor = color(p.strokeColHSV.h, p.strokeColHSV.s*255, p.strokeColHSV.v*255);
+  p.fillAlpha = random(255);
+  p.strokeAlpha = random(255);
 }

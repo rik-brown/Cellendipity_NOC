@@ -13,12 +13,12 @@ function Colony(colonySize, cellStartSize_) {
     if (p.centerSpawn) {var pos = createVector(width/2, height/2);} else {var pos = createVector(random(width), random(height));}
     var vel = p5.Vector.random2D(); // Initial velocity vector is random
     var dna = new DNA(); // Get new DNA
+    randomizeCellColor(); // Randomize all parameters
     this.cells.push(new Cell(pos, vel, p.fillColor, p.strokeColor, dna, p.cellStartSize)); // Add new Cell with DNA
   }
 
   this.spawn = function(mousePos, vel, fillColor_, strokeColor_, cellStartSize_) {
     // Spawn a new cell (called by e.g. MousePressed in main, accepting mouse coords for start position)
-    //var vel = p5.Vector.random2D(); // for the time being, vel is random
     var dna = new DNA();
     var cellStartSize = cellStartSize_;
     var fillColor = fillColor_;

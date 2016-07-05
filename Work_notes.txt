@@ -1,3 +1,49 @@
+Tuesday 5th July 08:47
+I have running code where a randomised population of cells interbreeds.
+Each cell in the initial spawn is unique (randomised parameters).
+New cells are spawned when fertile parents collide.
+The child 'inherits':
+color       The parent colors are lerp'ed
+StartSize   The parent sizes are averaged
+velocity    The parent velocity vectors are added and normalized
+position    new position is on the point of collision
+
+Apart from this, all new parameters are given by a combination of the current GUI values & the influence of the new cells (random) DNA
+Some of the GUI params are 'locked' (e.g. fertility=80%, StartSize = 30)
+This is a good start!
+
+How does it run?
+Populations are fairly slow to build or sink. Sometimes things die out within a few generations, other times it is clear the max-limit cull is in effect (it runs slowly)
+It looks cool and I like the fact that it starts off with a random mix of colours with each cell being unique (as opposed to 'competing clans', though I would like to see this too)
+
+Next steps:
+Combination of parent DNA gives new child DNA
+DNA passed into colony.spawn so it doesn't need to get new random DNAthis.spawn = function(mousePos, vel, fillColor_, strokeColor_, cellStartSize_) {
+  // Spawn a new cell (called by e.g. MousePressed in main, accepting mouse coords for start position)
+  //var vel = p5.Vector.random2D(); // for the time being, vel is random
+  var dna = new DNA();
+
+  Maybe just move the 'push' call to where I need it (cell.js for collisions, sketch.js for mousePressed)
+  this.cells.push(new Cell(mousePos, vel, fillColor, strokeColor, dna, cellStartSize));
+
+Ellipses can also be cigars (flatness < 1.0)
+
+
+
+Later on:
+Introduce 'nr. of clans' parameters
+0   = all cells unique
+1   = all cells identical
+>1  = 2 or more clans
+
+
+
+
+
+
+
+
+=============================================================================================================================
 I need to decide on some fundamental rules, like:
 
 Larger radius = lower fertility    (this would appear to be a rather simple linkage, but is a good place to start)

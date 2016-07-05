@@ -195,32 +195,37 @@ function Cell(pos, vel, fillColor_, strokeColor_, dna_, cellStartSize_) {
     this.spawnCount--;
     other.spawnCount--;
 
-    // Calculate position for spawn based on PVector between cell & other (leaving 'distVect' unchanged, as it is needed later)
-    // this.spawnPos = distVect.copy(); // Create spawnPos as a copy of the (already available) distVect which points from parent cell to other
-    // this.spawnPos.normalize();
-    // this.spawnPos.mult(this.r); // The spawn position is located at parent cell's radius
-    // this.spawnPos.add(this.position);
+    //Calculate position for spawn based on PVector between cell & other (leaving 'distVect' unchanged, as it is needed later)
+    var spawnPos = distVect.copy(); // Create spawnPos as a copy of the (already available) distVect which points from parent cell to other
+    spawnPos.normalize();
+    spawnPos.mult(this.r); // The spawn position is located at parent cell's radius
+    spawnPos.add(this.position);
     // 20th June 2016 Changing spawn position to the position of the current 'mother' cell for smoother branching.
-    this.spawnPos = this.position.copy();
+    // var spawnPos = this.position.copy();
 
+    // Calculate velocity vector for spawn as being roughly centered between parent cell & other
+    var spawnVel = this.velocity.copy(); // Create spawnVel as a copy of parent cell's velocity vector
+    spawnVel.add(other.velocity); // Add dad's velocity
+    spawnVel.normalize(); // Normalize to leave just the direction and magnitude of 1 (will be multiplied later)
 
-    // Calculate velocity vector for spawn as being centered between parent cell & other
-    this.spawnVel = this.velocity.copy(); // Create spawnVel as a copy of parent cell's velocity vector
-    this.spawnVel.add(other.velocity); // Add dad's velocity
-    this.spawnVel.normalize(); // Normalize to leave just the direction and magnitude of 1 (will be multiplied later)
+    // Calculate new fill colour for child (a 50/50 blend of each parent cells)
+    var childFillColor = lerpColor(this.fillColor, other.fillColor, 0.5);
 
-    // Calculate new colour for child
-    this.childFillColor = lerpColor(this.fillColor, other.fillColor, 0.5);
+    // Calculate new stroke colour for child (a 50/50 blend of each parent cells)
+    var childStrokeColor = lerpColor(this.strokeColor, other.strokeColor, 0.5);
 
-    // Calculate new stroke colour for child
-    this.childStrokeColor = lerpColor(this.strokeColor, other.strokeColor, 0.5);
+    // Calculate new cellStartSize for child (=average of each parent cells)
+    var childStartSize = (this.cellStartSize + other.cellStartSize) * 0.5;
 
     // Call spawn method (in Colony) with the new parameters for position, velocity, colour & starting radius)
-    colony.spawn(this.spawnPos, this.spawnVel, this.childFillColor, this.childStrokeColor, this.r);
+    // Note: Currently no combining of parent DNA
+    colony.spawn(spawnPos, spawnVel, childFillColor, childStrokeColor, childStartSize);
 
-    //Reset fertility counter
+    //Reduce fertility for parent cells by squaring them
     this.fertility *= this.fertility;
+    this.fertile = false;
     other.fertility *= other.fertility;
+    other.fertile = false;
   }
 
   this.cellDebugger = function() { // Displays cell parameters as text (for debug only)

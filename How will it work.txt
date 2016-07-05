@@ -1,0 +1,128 @@
+Parameters are initially determined in setup() when p is initialised using p = new Parameters();
+
+The GUI does not have to be initialised if it is not needed. The code can remain latent, but 'gui = new dat.GUI();' can be commented out.
+  Alternatively, the GUI can be edited so that only relevant controls are available (e.g. colony size, centered vs random etc.)
+
+I need to look at 'variance'. Maybe this isn't so helpful here. On the other hand, it could be kept in place and left at =0
+
+I need the inital spawn to include a variety of types, or 'clans'
+Do these need to be defined as an object? No I don't think so. I just need a way of spawning a group of cells having the same parameters.
+
+Number of subcultures could be selectable
+Number of cells per subculture is given by ColonySize / nr of clans
+
+Colony
+======
+
+The first part of the constructor iterates through the NumCells & populates the main array 'this.cells []'
+This needs to be done in a way that gives a variety of cells or cell 'clans'
+
+Before constructing a Cell, a new DNA object is created & passed on to the cell.
+What if the DNA object, in addition to containing 15 x 0/1 values, also contained other objects (like colors)?
+Or should the cells contain color objects?
+Or should I just fudge it based on what I already have?
+
+There is already a means of passing a color into the cell ():
+From setup()
+p.fillColor = color(p.fillColHSV.h, p.fillColHSV.s*255, p.fillColHSV.v*255);
+>to push()>>>>>
+this.cells.push(new Cell(pos, vel, p.fillColor, p.strokeColor, dna, p.cellStartSize)); // Add new Cell with DNA
+>to constructor>>>>
+function Cell(pos, vel, fillColor_, strokeColor_, dna_, cellStartSize_)
+
+This was needed to allow new cells to be added later which did not simply pick up their value directly from p.fillColor
+
+So I need to be able to :
+1) In colony, update p.fillColor with a new value. This can be done by calling a function in sketch.js which accomplishes this:
+  a) randomizer() which randomizes ALL parameters
+  b) A new function 'getNewColor()' which simply changes color parameters.
+2)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+=======================================================================================================================================================================
+PARAMETERS
+
+Maybe the set of parameters needs to be split into two groups:
+GLOBAL      Applies to all cells in the colony  (may be adjusted by GUI)
+INDIVIDUAL  Apply to a single cell or a group of identical cells (randomized before spawning)
+
+GLOBAL PARAMETERS (& some function-buttons)
+======
+this.colonySize = int(random (3,50)); // Max number of cells in the colony
+this.centerSpawn = false; // true=initial spawn is width/2, height/2 false=random
+this.autoRestart = false; // If true, will not wait for keypress before starting anew
+this.paused = false; // If true, draw will not advance unless mouseIsPressed
+this.bkgColHSV = { h: random(360), s: random(), v: random() };
+this.bkgColor = color(this.bkgColHSV.h, this.bkgColHSV.s*255, this.bkgColHSV.v*255); // Background colour
+this.wraparound = false;
+this.growing = true;
+this.veils = false;
+this.trails = true;
+this.restart = function () {colony.cells = []; populateColony();};
+this.randomRestart = function () {randomizer(); colony.cells = []; populateColony();};
+this.instructions = function () {window.open("http://rik-brown.github.io/Aybe_Sea/Instructions.txt")};
+this.debug = false;
+
+
+INDIVIDUAL PARAMETERS
+=====================
+
+//CELL color
+//Static colors are 100% linked to DNA
+5,6,7   this.fillColHSV = { h: random(360), s: random(), v: random() };
+        this.fillColor = color(this.fillColHSV.h, this.fillColHSV.s*255, this.fillColHSV.v*255); // Cell colour
+8       this.fillAlpha = random(255);
+9,10,11 this.strokeColHSV = { h: random(360), s: random(), v: random() };
+        this.strokeColor = color(this.strokeColHSV.h, this.strokeColHSV.s*255, this.strokeColHSV.v*255); // Cell colour
+12      this.strokeAlpha = random(255);
+
+
+this.fill_HTwist = floor(random(1, 360));
+this.fill_STwist = floor(random (1,255));
+this.fill_BTwist = floor(random (1,255));
+this.fill_ATwist = floor(random (1,255));
+this.stroke_HTwist = floor(random(1, 360));
+this.stroke_STwist = floor(random (1,255));
+this.stroke_BTwist = floor(random (1,255));
+this.stroke_ATwist = floor(random (1,255));
+
+//SIZE, SHAPE, GROWTH etc.
+0     this.cellStartSize = random(30,100); // Cell radius at spawn
+1     this.cellEndSize = random(0, 10);
+2     this.lifespan = int(random (100, 5000)); // Max lifespan in #frames
+14    this.fertileStart = int(random(90));
+this.spawnLimit = int(random(10));
+13    this.flatness = random(0, 50); // Amount of flatness (from circle to ellipse)
+
+//MOVEMENT
+3     this.noisePercent = random(100); // Percentage of velocity coming from noise-calculation
+this.spiral = random(2); // Number of full (TWO_PI) rotations the velocity heading will turn through during lifespan
+this.stepSize = 0;
+this.stepped = false;
+this.nucleus = true;
+this.stepSizeN = 10;
+
+NO LONGER NEEDED?
+=================
+this.randomize = false; // If true, parameters will be randomized on restart
+this.variance = random(100); // Degree of influence from modulators & tweakers (from 0-1 or 0-100%)
