@@ -212,6 +212,7 @@ var Parameters = function () { //These are the initial values, not the randomise
 
   this.bkgColHSV = { h: random(360), s: random(128, 255), v: random(128, 255) }; // HACKED so always above 128
   this.bkgColor = color(this.bkgColHSV.h, this.bkgColHSV.s*255, this.bkgColHSV.v*255); // Background colour
+  this.bkgColor = color(0, 0, 255); // Background colour HACKED to give white background
   this.fillColHSV = { h: random(360), s: random(), v: random() };
   this.fillColor = color(this.fillColHSV.h, this.fillColHSV.s*255, this.fillColHSV.v*255); // Cell colour
   this.fillAlpha = random(255);
