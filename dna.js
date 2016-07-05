@@ -3,7 +3,7 @@
 // by Daniel Shiffman <http://www.shiffman.net>
 // NOTE: 'copy()' and 'mutate()' are not in use
 
-var numGenes = 15
+var numGenes = 12
 
 // Constructor (makes a random DNA with 15 genes)
 function DNA(newgenes) {

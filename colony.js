@@ -6,7 +6,7 @@ function Colony(colonySize) {
   this.cells = [];
 
   // VARIABLES
-  var colonyMaxSize = 500; // This could be varied in the GUI but 500 seems to be an OK value
+  var colonyMaxSize = 300; // This could be varied in the GUI but 300 seems to be an OK value
 
   // Create initial population of cells
   for (var i = 0; i < colonySize; i++) {
@@ -16,10 +16,8 @@ function Colony(colonySize) {
     this.cells.push(new Cell(pos, vel, dna)); // Add new Cell with DNA
   }
 
-  this.spawn = function(mousePos, vel, fillColor_, strokeColor_, dna_) {
+  this.spawn = function(mousePos, vel, dna_) {
     // Spawn a new cell (called by e.g. MousePressed in main, accepting mouse coords for start position)
-    var fillColor = fillColor_;
-    var strokeColor = strokeColor_;
     this.cells.push(new Cell(mousePos, vel, dna_));
   };
 

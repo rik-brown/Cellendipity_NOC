@@ -1,11 +1,11 @@
 // cell Class
-function Cell(pos, vel, dna_) {
+function Cell(pos, vel, dna) {
 
   //  Objects
 
-  this.dna = dna_;
+  this.dna = dna;
 
-  // DNA gene mapping (15 genes)
+  // DNA gene mapping (12 genes)
   // 0 = fill Hue & vMax (Noise)
   // 1 = fill Saturation
   // 2 = fill Brightness & Spiral screw
@@ -196,29 +196,53 @@ function Cell(pos, vel, dna_) {
     spawnPos.normalize();
     spawnPos.mult(this.r); // The spawn position is located at parent cell's radius
     spawnPos.add(this.position);
-    // 20th June 2016 Changing spawn position to the position of the current 'mother' cell for smoother branching.
-    // var spawnPos = this.position.copy();
 
     // Calculate velocity vector for spawn as being roughly centered between parent cell & other
     var spawnVel = this.velocity.copy(); // Create spawnVel as a copy of parent cell's velocity vector
     spawnVel.add(other.velocity); // Add dad's velocity
     spawnVel.normalize(); // Normalize to leave just the direction and magnitude of 1 (will be multiplied later)
 
+    // Combine the DNA of the parent cells
+    var childDNA = this.dna.combine(other.dna);
+    print ('childDNA' + childDNA);
+    print ('0 mum:' + this.dna.genes[0]);
+    print ('0 dad:' + other.dna.genes[0]);
+    print ('0:' + childDNA.genes[0]);
+
     // Calculate new fill colour for child (a 50/50 blend of each parent cells)
     var childFillColor = lerpColor(this.fillColor, other.fillColor, 0.5);
+    var x = map(hue(childFillColor), 0, 360, 0, 1);
+    print (x);
+    var y = map(saturation(childFillColor), 0, 255, 0, 0.999) // Get the  lerped hue value and map it back to gene-range
+    print (y);
+    var z = map(brightness(childFillColor), 0, 255, 0, 0.999) // Get the  lerped hue value and map it back to gene-range
+    print (z);
 
     // Calculate new stroke colour for child (a 50/50 blend of each parent cells)
     var childStrokeColor = lerpColor(this.strokeColor, other.strokeColor, 0.5);
 
-    // Calculate new cellStartSize for child (=average of each parent cells)
-    var childStartSize = (this.cellStartSize + other.cellStartSize) * 0.5;
+    var xx = map(hue(childStrokeColor), 0, 360, 0, 1) // Get the  lerped hue value and map it back to gene-range
+    print (xx);
+    var yy = map(saturation(childStrokeColor), 0, 255, 0, 0.999) // Get the  lerped hue value and map it back to gene-range
+    print (yy);
+    var zz = map(brightness(childStrokeColor), 0, 255, 0,0.999) // Get the
+    print (zz);
 
-    // Combine the DNA of the parent cells
-    var childDNA = this.dna.combine(other.dna);
+
+
+
+    // Genes for color require special treatment as I want childColor to be a 50/50 blend of parents colors
+    // I will therefore overwrite color genes with reverse-engineered values after lerping:
+    childDNA.genes[0] = map(hue(childFillColor), 0, 360, 0, 1) // Get the  lerped hue value and map it back to gene-range
+    childDNA.genes[1] = map(saturation(childFillColor), 0, 255, 0, 0.999) // Get the  lerped hue value and map it back to gene-range
+    childDNA.genes[2] = map(brightness(childFillColor), 0, 255, 0, 0.999) // Get the  lerped hue value and map it back to gene-range
+    childDNA.genes[4] = map(hue(childStrokeColor), 0, 360, 0, 1) // Get the  lerped hue value and map it back to gene-range
+    childDNA.genes[5] = map(saturation(childStrokeColor), 0, 255, 0, 0.999) // Get the  lerped hue value and map it back to gene-range
+    childDNA.genes[6] = map(brightness(childStrokeColor), 0, 255, 0, 0.999) // Get the  lerped hue value and map it back to gene-range
 
     // Call spawn method (in Colony) with the new parameters for position, velocity, colour & starting radius)
     // Note: Currently no combining of parent DNA
-    colony.spawn(spawnPos, spawnVel, childFillColor, childStrokeColor,childDNA, childStartSize);
+    colony.spawn(spawnPos, spawnVel, childDNA);
 
 
     //Reduce fertility for parent cells by squaring them
