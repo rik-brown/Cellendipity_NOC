@@ -9,7 +9,6 @@ var colony; // A colony object
 
 function setup() {
   colorMode(HSB, 360, 255, 255, 255);
-  //createCanvas(windowWidth, windowHeight);
   createCanvas(windowWidth, windowHeight);
   ellipseMode(RADIUS);
   p = new Parameters();
