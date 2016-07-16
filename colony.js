@@ -9,11 +9,15 @@ function Colony(colonySize) {
   var colonyMaxSize = 300; // This could be varied in the GUI but 300 seems to be an OK value
 
   // Create initial population of cells
-  for (var i = 0; i < colonySize; i++) {
-    if (p.centerSpawn) {var pos = createVector(width/2, height/2);} else {var pos = createVector(random(width), random(height));}
-    var vel = p5.Vector.random2D(); // Initial velocity vector is random
+  var strainSize = floor(p.colonySize/p.numStrains);
+  for (var i = 0; i < p.numStrains; i++) {
     var dna = new DNA(); // Get new DNA
-    this.cells.push(new Cell(pos, vel, dna)); // Add new Cell with DNA
+    if (p.centerSpawn) {var pos = createVector(width/2, height/2);} else {var pos = createVector(random(width), random(height));}
+    for (var j = 0; j < strainSize; j++) {
+      //if (p.centerSpawn) {var pos = createVector(width/2, height/2);} else {var pos = createVector(random(width), random(height));}
+      var vel = p5.Vector.random2D(); // Initial velocity vector is random
+      this.cells.push(new Cell(pos, vel, dna)); // Add new Cell with DNA
+    }
   }
 
   this.spawn = function(mousePos, vel, dna_) {

@@ -106,6 +106,8 @@ var initGUI = function () {
 
 	var controller = gui.add(p, 'colonySize', 1, 200).step(1).name('Colony Size').listen();
 	  controller.onChange(function(value) {populateColony(); });
+  var controller = gui.add(p, 'numStrains', 1, 10).step(1).name('Strains').listen();
+	  controller.onChange(function(value) {populateColony(); });
 	var controller = gui.add(p, 'centerSpawn').name('Centered [C]').listen();
 	  controller.onChange(function(value) {populateColony(); });
   var controller = gui.add(p, 'wraparound').name('Wraparound');
@@ -146,6 +148,7 @@ var initGUI = function () {
 
 var Parameters = function () { //These are the initial values, not the randomised ones
   this.colonySize = int(random (20,80)); // Max number of cells in the colony
+  this.numStrains = int(random(1,10)); // Number of strains (a group of cells sharing the same DNA)
 
   this.centerSpawn = false; // true=initial spawn is width/2, height/2 false=random
   this.autoRestart = false; // If true, will not wait for keypress before starting anew
@@ -163,16 +166,16 @@ var Parameters = function () { //These are the initial values, not the randomise
   this.stroke_ATwist = 0;
 
   this.fillDisable = false;
-  this.strokeDisable = true;
+  this.strokeDisable = false;
 
-  this.nucleus = true;
+  this.nucleus = false;
 
   this.stepSize = 0;
   this.stepSizeN = 00;
   this.stepped = false;
 
-  this.wraparound = false;
-  this.trailMode = 1; // 1=none, 2 = blend, 3 = continuous
+  this.wraparound = true;
+  this.trailMode = 3; // 1=none, 2 = blend, 3 = continuous
 
   this.restart = function () {colony.cells = []; populateColony();};
   this.randomRestart = function () {randomizer(); colony.cells = []; populateColony();};
