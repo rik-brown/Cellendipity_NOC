@@ -31,7 +31,7 @@ function Cell(pos, vel, dna) {
   // SIZE AND SHAPE
   this.cellStartSize = map(this.dna.genes[8], 0, 1, 20, 50);
   this.cellEndSize = this.cellStartSize * map(this.dna.genes[9], 0, 1, 0, 0.1);
-  this.r = this.cellStartSize; // Initial value for radius
+  //this.r = this.cellStartSize; // Initial value for radius
   this.flatness = map(this.dna.genes[11], 0, 1, 0.5, 2); // To make circles into ellipses. range 0.5 - 1.5
   this.growth = (this.cellStartSize-this.cellEndSize)/this.lifespan; // Should work for both large>small and small>large
   this.drawStep = 1;
@@ -99,7 +99,8 @@ function Cell(pos, vel, dna) {
   }
 
   this.updateSize = function() {
-    this.r -= this.growth;
+    this.r = ((cos(map(this.maturity, 1, 0, PI, PI*3)))+1)*this.cellStartSize
+    //this.r -= this.growth;
   }
 
   this.updateFertility = function() {
@@ -140,7 +141,7 @@ function Cell(pos, vel, dna) {
 
   // Death
   this.dead = function() {
-    if (this.cellEndSize < this.cellStartSize && this.r <= this.cellEndSize) {return true;} // Death by size (only when cell is shrinking)
+    //if (this.cellEndSize < this.cellStartSize && this.r <= this.cellEndSize) {return true;} // Death by size (only when cell is shrinking)
     if (this.age >= this.lifespan) {return true;} // Death by old age (regardless of size, which may remain constant)
     if (this.position.x > width + this.r*this.flatness || this.position.x < -this.r*this.flatness || this.position.y > height + this.r*this.flatness || this.position.y < -this.r*this.flatness) {return true;} // Death if move beyond canvas boundary
     else {return false; }
@@ -239,7 +240,7 @@ function Cell(pos, vel, dna) {
     fill(0);
     textSize(rowHeight);
     // RADIUS
-    //text("r:" + this.r, this.position.x, this.position.y + rowHeight*1);
+    text("r:" + this.r, this.position.x, this.position.y + rowHeight*1);
     // text("cellStartSize:" + this.cellStartSize, this.position.x, this.position.y + rowHeight*0);
     // text("cellEndSize:" + this.cellEndSize, this.position.x, this.position.y + rowHeight*1);
 

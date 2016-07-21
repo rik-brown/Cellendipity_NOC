@@ -82,9 +82,9 @@ function keyTyped() {
     colony.cells = [];
   }
 
-  // if (key === 'd') { // D toggles 'cell debug' mode
-  //   p.debug = !p.debug;
-  // }
+  if (key === 'd') { // D toggles 'cell debug' mode
+    p.debug = !p.debug;
+  }
 
   if (key === 'n') { // N toggles 'show nucleus' mode
     p.nucleus = !p.nucleus;
