@@ -29,7 +29,8 @@ function Cell(pos, vel, dna) {
   this.spawnCount = int(map(this.dna.genes[10], 1, 0, 1, 5)); // Max. number of spawns
 
   // SIZE AND SHAPE
-  this.cellStartSize = map(this.dna.genes[8], 0, 1, 20, 50);
+  // this.cellStartSize = map(this.dna.genes[8], 0, 1, 20, 50);
+  this.cellStartSize = map(this.dna.genes[8], 0, 1, 10, 20);
   this.cellEndSize = this.cellStartSize * map(this.dna.genes[9], 0, 1, 0, 0.1);
   //this.r = this.cellStartSize; // Initial value for radius
   this.flatness = map(this.dna.genes[11], 0, 1, 0.5, 2); // To make circles into ellipses. range 0.5 - 1.5
@@ -54,7 +55,7 @@ function Cell(pos, vel, dna) {
   this.fill_S = map(this.dna.genes[1], 0, 1, 0, 255);
   this.fill_B = map(this.dna.genes[2], 0, 1, 0, 255);
   this.fillColor = color(this.fill_H, this.fill_S, this.fill_B); // Initial color is set
-  this.fillAlpha = map(this.dna.genes[3], 0, 1, 0, 255);
+  this.fillAlpha = map(this.dna.genes[3], 0, 1, 128, 255);
 
   //STROKE COLOR
   this.stroke_H = map(this.dna.genes[4], 0, 1, 0, 360);

@@ -9,7 +9,8 @@ var colony; // A colony object
 
 function setup() {
   colorMode(HSB, 360, 255, 255, 255);
-  createCanvas(windowWidth, windowHeight);
+  //createCanvas(windowWidth, windowHeight);
+  createCanvas(1024, 1024);
   ellipseMode(RADIUS);
   p = new Parameters();
   gui = new dat.GUI();
