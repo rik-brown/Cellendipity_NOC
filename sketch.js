@@ -9,8 +9,8 @@ var colony; // A colony object
 
 function setup() {
   colorMode(HSB, 360, 255, 255, 255);
-  //createCanvas(windowWidth, windowHeight);
-  createCanvas(1024, 1024);
+  createCanvas(windowWidth, windowHeight);
+  //createCanvas(1024, 1024);
   ellipseMode(RADIUS);
   p = new Parameters();
   gui = new dat.GUI();
@@ -103,13 +103,13 @@ function keyTyped() {
 }
 
 var initGUI = function () {
-
-
-	var controller = gui.add(p, 'colonySize', 1, 200).step(1).name('Colony Size').listen();
-	  controller.onChange(function(value) {populateColony(); });
+	// var controller = gui.add(p, 'colonySize', 1, 200).step(1).name('Colony Size').listen();
+	//   controller.onChange(function(value) {populateColony(); });
   var controller = gui.add(p, 'numStrains', 1, 10).step(1).name('Strains').listen();
 	  controller.onChange(function(value) {populateColony(); });
-	var controller = gui.add(p, 'centerSpawn').name('Centered [C]').listen();
+  var controller = gui.add(p, 'strainSize', 1, 20).step(1).name('Cells in Strain').listen();
+    controller.onChange(function(value) {populateColony(); });
+  var controller = gui.add(p, 'centerSpawn').name('Centered [C]').listen();
 	  controller.onChange(function(value) {populateColony(); });
   var controller = gui.add(p, 'wraparound').name('Wraparound');
     controller.onChange(function(value) {populateColony();});
@@ -149,6 +149,7 @@ var initGUI = function () {
 
 var Parameters = function () { //These are the initial values, not the randomised ones
   this.colonySize = int(random (20,80)); // Max number of cells in the colony
+  this.strainSize = int(random(1,10)); // Number of cells in a strain
   this.numStrains = int(random(1,10)); // Number of strains (a group of cells sharing the same DNA)
 
   this.centerSpawn = false; // true=initial spawn is width/2, height/2 false=random
@@ -158,13 +159,13 @@ var Parameters = function () { //These are the initial values, not the randomise
   this.bkgColor = color(this.bkgColHSV.h, this.bkgColHSV.s*255, this.bkgColHSV.v*255); // Background colour
 
   this.fill_HTwist = 0;
-  this.fill_STwist = 0;
-  this.fill_BTwist = 0;
-  this.fill_ATwist = 0;
+  this.fill_STwist = 255;
+  this.fill_BTwist = 128;
+  this.fill_ATwist = 255;
   this.stroke_HTwist = 0;
-  this.stroke_STwist = 0;
-  this.stroke_BTwist = 0;
-  this.stroke_ATwist = 0;
+  this.stroke_STwist = 255;
+  this.stroke_BTwist = 128;
+  this.stroke_ATwist = 255;
 
   this.fillDisable = false;
   this.strokeDisable = false;
@@ -185,7 +186,7 @@ var Parameters = function () { //These are the initial values, not the randomise
 }
 
 function randomizer() { // Parameters are randomized (more than in the initial configuration)
-  p.colonySize = int(random (10,200));
+  //p.colonySize = int(random (10,200));
   if (random(1) > 0.4) {p.centerSpawn = true;} else {p.centerSpawn = false;}
 
   p.bkgColHSV = { h: random(360), s: random(), v: random() };
