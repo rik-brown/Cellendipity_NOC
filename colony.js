@@ -12,7 +12,8 @@ function Colony(colonySize) {
   //var strainSize = floor(p.colonySize/p.numStrains);
   for (var i = 0; i < p.numStrains; i++) {
     var dna = new DNA(); // Get new DNA
-    if (p.centerSpawn) {var pos = createVector(width/2, height/2);} else {var pos = createVector(random(width), random(height));}
+    if (p.centerSpawn) {var pos = createVector(width/2, height/2);}
+    else {var pos = createVector(random(width), random(height));}
     for (var j = 0; j < p.strainSize; j++) {
       //if (p.centerSpawn) {var pos = createVector(width/2, height/2);} else {var pos = createVector(random(width), random(height));}
       var vel = p5.Vector.random2D(); // Initial velocity vector is random

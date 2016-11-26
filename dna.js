@@ -27,7 +27,7 @@ function DNA(newgenes) {
   }
 
   // Based on a mutation probability 'm', picks a new random character in array spots
-  this.mutate = function(m) { 
+  this.mutate = function(m) {
     for (var i = 0; i < this.genes.length; i++) {
       if (random(1) < m) {
         this.genes[i] = random(0, 1);
